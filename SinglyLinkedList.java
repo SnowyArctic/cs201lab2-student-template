@@ -123,21 +123,50 @@ public class SinglyLinkedList<E extends Comparable<E>> {
         });
 
         int n = originalOrder.size();
+
+        // for (int i = 0; i < n / 2; i++) {
+        //     Node<E> forward = sortedOrder.get(i);
+        //     Node<E> backward = sortedOrder.get(n - 1 - i);
+
+        //     int indexForward = originalOrder.indexOf(forward);
+        //     int indexBackward = originalOrder.indexOf(backward);
+
+        //     Collections.swap(originalOrder, indexForward, indexBackward);
+        // }
+
+        // for (int i = 0; i < n - 1; i++) {
+        //     Node<E> present = originalOrder.get(i);
+        //     Node<E> next = originalOrder.get(i + 1);
+
+        //     present.setNext(next);
+        // }
+
+        // head = originalOrder.get(0);
+        // tail = originalOrder.get(n-1);
+
+        // tail.setNext(null);
+
+        Map<Node<E>, Integer> indexMap = new HashMap<>(n);
+        for (int i = 0; i < n; i++) {
+            indexMap.put(originalOrder.get(i), i);
+        }
+
         for (int i = 0; i < n / 2; i++) {
             Node<E> forward = sortedOrder.get(i);
             Node<E> backward = sortedOrder.get(n - 1 - i);
 
-            int indexForward = originalOrder.indexOf(forward);
-            int indexBackward = originalOrder.indexOf(backward);
+            int indexForward = indexMap.get(forward);
+            int indexBackward = indexMap.get(backward);
 
-            Collections.swap(originalOrder, indexForward, indexBackward);
+            originalOrder.set(indexForward, backward);
+            originalOrder.set(indexBackward, forward);
+
+            indexMap.put(forward, indexBackward);
+            indexMap.put(backward, indexForward);
         }
 
         for (int i = 0; i < n - 1; i++) {
-            Node<E> present = originalOrder.get(i);
-            Node<E> next = originalOrder.get(i + 1);
-
-            present.setNext(next);
+            originalOrder.get(i).setNext(originalOrder.get(i + 1));
         }
 
         head = originalOrder.get(0);
